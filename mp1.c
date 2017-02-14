@@ -13,7 +13,11 @@ MODULE_AUTHOR("Group_ID");
 MODULE_DESCRIPTION("CS-423 MP1");
 
 #define DEBUG 1
-#define procfs_name "mp1Test"
+#define PROC_DIR_NAME "mp1"
+#define PROC_FILE_NAME "status"
+
+static struct proc_dir_entry *proc_dir;
+static struct proc_dir_entry *proc_entry;
 
 char *msg;
 int len, temp;
@@ -34,7 +38,14 @@ struct file_operations proc_fops = {
 };
 
 void proc_init(void){
-	proc_create(procfs_name, 0, NULL, &proc_fops);
+	proc_dir = proc_mkdir(PROC_DIR_NAME, NULL);
+	if(!proc_dir){
+		printk(KERN_ALERT "Failed to create MP1 directory!");
+	}
+	proc_entry = proc_create(PROC_FILE_NAME, 0666, proc_dir, &proc_fops);
+	if(!proc_entry){
+		printk(KERN_ALERT "Failed to create Status File!");
+	}
 	msg = "Created Proc MP1 Test\n";
 	len = strlen(msg);
 	temp = len;	
@@ -44,7 +55,8 @@ void proc_init(void){
 
 // defined proc entry and exit functions
 void proc_cleanup(void){	
-	remove_proc_entry(procfs_name, NULL);
+	remove_proc_entry(PROC_FILE_NAME, proc_dir);
+	remove_proc_entry(PROC_DIR_NAME, NULL);
 }
 
 // mp1_init - Called when module is loaded
