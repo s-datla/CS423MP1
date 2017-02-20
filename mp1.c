@@ -132,7 +132,6 @@ static void mykmod_work_handler(struct work_struct *pwork)
 // mp1_init - Called when module is loaded
 int __init mp1_init(void)
 {
-  struct process_list *aProcess;
   #ifdef DEBUG
   printk(KERN_ALERT "MP1 MODULE LOADING\n");
   #endif
@@ -153,7 +152,7 @@ int __init mp1_init(void)
 
   add_node_to_list(20);
   add_node_to_list(3);
-  
+
   printk(KERN_ALERT "MP1 MODULE LOADED\n");
   return 0;
 }
