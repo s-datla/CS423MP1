@@ -14,7 +14,7 @@
 #include <asm/segment.h>
 
 // Prototypes
-void cleanup_list();
+void cleanup_list(void);
 
 #include "mp1_given.h"
 
@@ -35,7 +35,6 @@ static DECLARE_WORK(update, mykmod_work_handler);
 
 // Timer definition
 static struct timer_list my_timer;
-static char proc_buffer;
 struct file *proc_entry_fs;
 
 // Linked List definitions
@@ -76,7 +75,7 @@ static const struct file_operations entry_fops = {
 
 void update_cpu_time()//this part goes to the work queue
 {
-  struct process_list *process_entry, *temp;
+  struct process_list *process_entry;
   printk(KERN_ALERT "Updating CPU times");
   list_for_each_entry(process_entry, &p_list.list, list) {
     if (get_cpu_use(process_entry->PID, &(process_entry->cpu_time)) == 0){
@@ -121,7 +120,7 @@ static void mykmod_work_handler(struct work_struct *pwork)
   if(emptyFlag != 0){
     printk(KERN_INFO "Traversing the list using list_for_each_entry()n");
     list_for_each_entry(aProcess, &p_list.list, list) {
-        printk(KERN_INFO "PID: %d; CPU_TIME: %u\n;", aProcess->PID, aProcess->cpu_time);
+        printk(KERN_INFO "PID: %d; CPU_TIME: %lu\n;", aProcess->PID, aProcess->cpu_time);
     }
   }else{
     printk(KERN_ALERT "Empty list");
@@ -178,7 +177,7 @@ void __exit mp1_exit(void)
 }
 
 // Function used to free up the memory allocated by the
-void cleanup_list() {
+void cleanup_list(void) {
   struct process_list *process_entry, *temp;
   printk(KERN_ALERT "Cleaning up list safely");
   list_for_each_entry_safe(process_entry, temp, &p_list.list, list){
