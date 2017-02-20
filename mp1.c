@@ -119,10 +119,7 @@ static void mykmod_work_handler(struct work_struct *pwork)
 {
   struct process_list *aProcess;
   if(emptyFlag != 0){
-    printk(KERN_INFO "Traversing the list using list_for_each_entry()n");
-    list_for_each_entry(aProcess, &p_list.list, list) {
-        printk(KERN_INFO "PID: %d; CPU_TIME: %lu\n;", aProcess->PID, aProcess->cpu_time);
-    }
+    update_cpu_time();
   }else{
     printk(KERN_ALERT "Empty list");
   }
@@ -176,7 +173,7 @@ void cleanup_list(void) {
   struct process_list *process_entry, *temp;
   printk(KERN_ALERT "Cleaning up list safely");
   list_for_each_entry_safe(process_entry, temp, &p_list.list, list){
-    printk(KERN_INFO "freeing node %dn", process_entry->PID);
+    printk(KERN_INFO "Freeing node %d \n", process_entry->PID);
     list_del(&process_entry->list);
     kfree(process_entry);
   }
