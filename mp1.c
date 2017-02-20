@@ -84,6 +84,7 @@ void update_cpu_time(void)//this part goes to the work queue
     } else {
       printk(KERN_INFO "Failed to update new times");
     }
+    printk(KERN_INFO "PID: %d; CPU_TIME: %lu\n;", aProcess->PID, aProcess->cpu_time);
   }
 }
 
