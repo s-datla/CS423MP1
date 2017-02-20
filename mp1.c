@@ -147,8 +147,7 @@ int __init mp1_init(void)
   printk(KERN_ALERT "Initialising Process List");
   INIT_LIST_HEAD(&p_list.list);
 
-  add_node_to_list(20);
-  add_node_to_list(3);
+  add_node_to_list(1);
 
   printk(KERN_ALERT "MP1 MODULE LOADED\n");
   return 0;
