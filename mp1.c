@@ -132,6 +132,7 @@ static void mykmod_work_handler(struct work_struct *pwork)
 // mp1_init - Called when module is loaded
 int __init mp1_init(void)
 {
+  struct process_list *aProcess;
   #ifdef DEBUG
   printk(KERN_ALERT "MP1 MODULE LOADING\n");
   #endif
@@ -149,7 +150,7 @@ int __init mp1_init(void)
 
   printk(KERN_ALERT "Initialising Process List");
   INIT_LIST_HEAD(&p_list.list);
-  struct process_list *aProcess;
+
   aProcess = kmalloc(sizeof(*aProcess), GFP_KERNEL);
   aProcess->PID = 1;
   aProcess->cpu_time = 100;
