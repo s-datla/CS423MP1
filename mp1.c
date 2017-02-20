@@ -48,7 +48,7 @@ struct process_list p_list;
 
 // Other variables
 int len,temp,flag;
-int emptyFlag = 1;
+int emptyFlag = 0;
 
 
 
@@ -146,8 +146,6 @@ int __init mp1_init(void)
 
   printk(KERN_ALERT "Initialising Process List");
   INIT_LIST_HEAD(&p_list.list);
-
-  add_node_to_list(1);
 
   printk(KERN_ALERT "MP1 MODULE LOADED\n");
   return 0;
