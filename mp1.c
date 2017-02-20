@@ -117,7 +117,6 @@ void my_timer_callback( unsigned long data )
 
 static void mykmod_work_handler(struct work_struct *pwork)
 {
-  struct process_list *aProcess;
   if(emptyFlag != 0){
     update_cpu_time();
   }else{
