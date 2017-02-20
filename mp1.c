@@ -13,6 +13,8 @@
 #include <linux/buffer_head.h>
 #include <asm/segment.h>
 
+// Prototypes
+void cleanup_list();
 
 #include "mp1_given.h"
 
@@ -52,25 +54,14 @@ int emptyFlag = 1;
 
 ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 {
-  if(count>temp)//why do we need these conditions to make "cat" print only once
-  {
-    count=temp;
-  }
-  temp=temp-count;
-  copy_to_user(buf,msg, count);
-  if(count==0)
-  temp=len;
-  return count;
+  return 0;
 
 }
 
 
 ssize_t write_proc(struct file *filp,const char *buf,size_t count,loff_t *offp)
 {
-  copy_from_user(msg,buf,count);
-  len=count;
-  temp=len;
-  return count;
+  return 0;
 }
 
 static const struct file_operations entry_fops = {
@@ -88,7 +79,7 @@ void update_cpu_time()//this part goes to the work queue
   struct process_list *process_entry, *temp;
   printk(KERN_ALERT "Updating CPU times");
   list_for_each_entry(process_entry, &p_list.list, list) {
-    if (get_cpu_use(PID, &(process_entry->cpu_time)) == 0){
+    if (get_cpu_use(process_entry->PID, &(process_entry->cpu_time)) == 0){
       printk(KERN_INFO "Successfully updated cpu times");
     } else {
       printk(KERN_INFO "Failed to update new times");
@@ -156,7 +147,7 @@ int __init mp1_init(void)
   mod_timer(&my_timer, jiffies + msecs_to_jiffies(1000));
   flag=0;//for tesing purpose
 
-  prink(KERN_ALERT "Initialising Process List");
+  printk(KERN_ALERT "Initialising Process List");
   INIT_LIST_HEAD(&p_list.list);
   struct process_list *aProcess;
 
