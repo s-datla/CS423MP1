@@ -15,6 +15,7 @@
 
 // Prototypes
 void cleanup_list(void);
+void update_cpu_time(void);
 
 #include "mp1_given.h"
 
@@ -73,7 +74,7 @@ static const struct file_operations entry_fops = {
 
 
 
-void update_cpu_time()//this part goes to the work queue
+void update_cpu_time(void)//this part goes to the work queue
 {
   struct process_list *process_entry;
   printk(KERN_ALERT "Updating CPU times");
@@ -149,7 +150,6 @@ int __init mp1_init(void)
   printk(KERN_ALERT "Initialising Process List");
   INIT_LIST_HEAD(&p_list.list);
   struct process_list *aProcess;
-
   aProcess = kmalloc(sizeof(*aProcess), GFP_KERNEL);
   aProcess->PID = 1;
   aProcess->cpu_time = 100;
