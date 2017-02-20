@@ -151,14 +151,9 @@ int __init mp1_init(void)
   printk(KERN_ALERT "Initialising Process List");
   INIT_LIST_HEAD(&p_list.list);
 
-  aProcess = kmalloc(sizeof(*aProcess), GFP_KERNEL);
-  aProcess->PID = 1;
-  aProcess->cpu_time = 100;
-  INIT_LIST_HEAD(&aProcess->list);
-  /* add the new node to mylist */
-  list_add_tail(&(aProcess->list), &(p_list.list));
-  emptyFlag = 1;
-
+  add_node_to_list(20);
+  add_node_to_list(3);
+  
   printk(KERN_ALERT "MP1 MODULE LOADED\n");
   return 0;
 }
