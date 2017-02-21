@@ -54,9 +54,9 @@ char my_buffer[100];
 
 ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 {
-  int len = 0, total = 0;
+  int len = 0;
   if (*offp > 0) {
-      total = 0;
+      len = 0;
   } else {
     struct process_list *process_entry;
     list_for_each_entry(process_entry, &p_list.list, list) {

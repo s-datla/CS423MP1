@@ -31,7 +31,7 @@ int main(int argc, int *argv[])
   fclose(proc_entry_fs);
 
   int i = 0;
-  for(i = 1; i <= 20; i++){
+  for(i = 1; i <= 2000; i++){
     factorial(i);
   }
   return 0;
