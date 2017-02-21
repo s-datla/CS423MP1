@@ -49,19 +49,18 @@ struct process_list p_list;
 // Other variables
 int len,temp,flag;
 int emptyFlag = 0;
-
+char my_buffer[100];
 
 ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 {
   int len = 0, total = 0;
-  char my_buffer[100];
   if (*offp > 0) {
-      total = 0
+      total = 0;
   } else {
     struct process_list *process_entry;
     list_for_each_entry(process_entry, &p_list.list, list) {
       len = sprintf(my_buffer,"PID: %d , CPU: %lu \n", process_entry->PID, process_entry->cpu_time);
-      copy_to_user(buf,my_buffer,len+1)
+      copy_to_user(buf,my_buffer,len+1);
       total += len + 1;
     }
   }
@@ -72,7 +71,7 @@ ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 ssize_t write_proc(struct file *filp,const char *buf,size_t count,loff_t *offp)
 {
   long user_PID;
-  copy_from_user(msg,buf,count);
+  copy_from_user(my_buffer,buf,count);
   kstrtoul(msg,0,&user_PID);
   add_node_to_list(user_PID);
   return count;
