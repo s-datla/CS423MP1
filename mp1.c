@@ -58,7 +58,6 @@ ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
   char *temp = (char *)kmalloc(count, GFP_KERNEL);
 
   if( (int) *offp > 0) {
-    kfree(pid);
     offset = 0;
   } else {
     struct process_list *process_entry;
