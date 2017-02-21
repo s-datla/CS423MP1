@@ -50,34 +50,39 @@ struct process_list p_list;
 int len,temp,flag;
 int emptyFlag = 0;
 static char msg[10];
-size_t num_byte_from_user;
 
 
 ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 {
   struct process_list *process_entry;
-  char PIDstr[5]="PID \0";
-  char CPUTIMEstr[10]="CPU time \0";
-  char new_line="\0";
+  char PIDstr[]="PID \0";
+  char CPUTIMEstr[]="CPU time \0";
+  char new_line[] ="\0";
+  size_t ret = 0;
   list_for_each_entry(process_entry, &p_list.list, list) {
       copy_to_user(buf, PIDstr, 5);
-      kstrtol(msg,0,&((process_entry*).PID));
-      copy_to_user(buf, msg, (int)num_byte_from_user);
+      kstrtoul(msg,0,&(process_entry->PID));
+      ret += strlen(msg);
+      printk(KERN_INFO "PID: %s\n", msg);
+      copy_to_user(buf, msg, strlen(msg));
       copy_to_user(buf, CPUTIMEstr, 10);
-      kstrtol(msg,0,&((process_entry*).cpu_time));
+      kstrtoul(msg,0,&(process_entry->cpu_time));
+      printk(KERN_INFO "CPU TIME: %s\n", msg);
+      ret += strlen(msg);
+      copy_to_user(buf, msg, strlen(msg))l
       copy_to_user(buf, &new_line, 1);
+      ret += 16;
   }
-  return 0;
+  return ret;
 }
 
 
 ssize_t write_proc(struct file *filp,const char *buf,size_t count,loff_t *offp)
 {
   long user_PID;
-  copy_from_user(msg,buf,count); 
-  kstrtol(msg,0,&user_PID);
-  num_byte_from_user = (size_t)count;
-  add_node_to_list((unsigned long)PID);
+  copy_from_user(msg,buf,count);
+  kstrtoul(msg,0,&user_PID);
+  add_node_to_list(user_PID);
   return count;
 }
 
