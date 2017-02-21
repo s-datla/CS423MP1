@@ -94,14 +94,17 @@ static const struct file_operations entry_fops = {
 
 void update_cpu_time(void)//this part goes to the work queue
 {
-  struct process_list *process_entry;
+  int result;
   printk(KERN_ALERT "Updating CPU times");
-  list_for_each_entry(process_entry, &p_list.list, list) {
+  struct process_list *process_entry, *temp;
+  list_for_each_entry_safe(process_entry, temp, &p_list.list, list){
     if (get_cpu_use(process_entry->PID, &(process_entry->cpu_time)) == 0){
       printk(KERN_INFO "Successfully updated cpu times");
     } else {
-      printk(KERN_INFO "Failed to update new times");
+      list_del(&process_entry->list);
+      kfree(process_entry);
     }
+    process_entry->cpu_time = jiffies_to_msecs(cputime_to_jiffies(process_entry->cpu_time));
     printk(KERN_INFO "PID: %d; CPU_TIME: %lu\n;", process_entry->PID, process_entry->cpu_time);
   }
 }
@@ -141,6 +144,7 @@ static void mykmod_work_handler(struct work_struct *pwork)
   }else{
     printk(KERN_ALERT "Empty list");
   }
+  kfree((void *)work);
 }
 
 

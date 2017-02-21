@@ -14,7 +14,6 @@ void factorial(int n){
 
 int main(int argc, int *argv[])
 {
-
   unsigned long pid = getpid();
   char str[256];
   sprintf(str, "echo '%lu'>/proc/mp1/status", pid);
