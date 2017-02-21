@@ -4,6 +4,13 @@
 #include <stdlib.h> 
 #include <string.h>
 
+int factorial(int n){
+  int temp=0, result=1;
+  for(temp=1;temp<=n; temp++){
+      result=result*temp;
+  }
+  print("Result: %d\n", result);
+}
 
 int main(int argc, int *argv[])
 {	long pid;
