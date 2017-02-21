@@ -54,17 +54,23 @@ char my_buffer[100];
 
 ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 {
-  int len = 0;
-  if (*offp > 0) {
-      len = 0;
+  int len = 0, offset = 0;
+  char *temp = (char *)kmalloc(count, GFP_KERNEL);
+
+  if( (int) *offp > 0) {
+    kfree(pid);
+    offset = 0;
   } else {
     struct process_list *process_entry;
     list_for_each_entry(process_entry, &p_list.list, list) {
-      len += sprintf(buf + len,"PID: %d , CPU: %lu \n", process_entry->PID, process_entry->cpu_time);
-      copy_to_user(buf,my_buffer,len);
+      len = sprintf(buf + offset,"PID: %d , CPU: %lu\n", process_entry->PID, process_entry->cpu_time);
+      offset += len;
     }
   }
-  return len;
+  copy_to_user(buf, temp, offset);
+  kfree(temp);
+  *offp += offset;
+  return offset;
 }
 
 

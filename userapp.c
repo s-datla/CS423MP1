@@ -5,7 +5,7 @@
 #include <string.h>
 
 void factorial(int n){
-  int temp=0, result=1;
+  int temp=1, result=1;
   for(temp=1;temp<=n; temp++){
     result=result*temp;
   }
@@ -33,6 +33,7 @@ int main(int argc, int *argv[])
   int i = 0;
   for(i = 1; i <= 2000; i++){
     factorial(i);
+    sleep(100);
   }
   return 0;
 }
