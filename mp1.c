@@ -54,26 +54,17 @@ static char msg[10];
 
 ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 {
+  int len, total;
+  char my_buffer[100];
+  if (offset > 0)
+    return 0;
   struct process_list *process_entry;
-  char PIDstr[]="PID \0";
-  char CPUTIMEstr[]="CPU time \0";
-  char new_line[] ="\0";
-  size_t ret = 0;
   list_for_each_entry(process_entry, &p_list.list, list) {
-      copy_to_user(buf, PIDstr, 5);
-      kstrtoul(msg,0,&(process_entry->PID));
-      ret += strlen(msg);
-      printk(KERN_INFO "PID: %s\n", msg);
-      copy_to_user(buf, msg, strlen(msg));
-      copy_to_user(buf, CPUTIMEstr, 10);
-      kstrtoul(msg,0,&(process_entry->cpu_time));
-      printk(KERN_INFO "CPU TIME: %s\n", msg);
-      ret += strlen(msg);
-      copy_to_user(buf, msg, strlen(msg))l
-      copy_to_user(buf, &new_line, 1);
-      ret += 16;
+    len = sprintf(my_buffer,"PID: %d , CPU: %lu \n", process_entry->PID, process_entry->cpu_time);
+    copy_to_user(buf,my_buffer,len+1)
+    total += len + 1;
   }
-  return ret;
+  return total;
 }
 
 
