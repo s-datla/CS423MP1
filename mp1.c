@@ -8,6 +8,7 @@
 #include <linux/timer.h>
 #include <linux/workqueue.h>
 #include <linux/spinlock.h>
+#include <linux/uaccess.h>
 
 #include "mp1_given.h"
 #include "mp1.h"
