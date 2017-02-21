@@ -49,19 +49,36 @@ struct process_list p_list;
 // Other variables
 int len,temp,flag;
 int emptyFlag = 0;
-
+static char msg[10];
+size_t num_byte_from_user;
 
 
 ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 {
+  struct process_list *process_entry;
+  char PIDstr[5]="PID \0";
+  char CPUTIMEstr[10]="CPU time \0";
+  char new_line="\0";
+  list_for_each_entry(process_entry, &p_list.list, list) {
+      copy_to_user(buf, PIDstr, 5);
+      kstrtol(msg,0,&((process_entry*).PID));
+      copy_to_user(buf, msg, (int)num_byte_from_user);
+      copy_to_user(buf, CPUTIMEstr, 10);
+      kstrtol(msg,0,&((process_entry*).cpu_time));
+      copy_to_user(buf, &new_line, 1);
+  }
   return 0;
-
 }
 
 
 ssize_t write_proc(struct file *filp,const char *buf,size_t count,loff_t *offp)
 {
-  return 0;
+  long user_PID;
+  copy_from_user(msg,buf,count); 
+  kstrtol(msg,0,&user_PID);
+  num_byte_from_user = (size_t)count;
+  add_node_to_list((unsigned long)PID);
+  return count;
 }
 
 static const struct file_operations entry_fops = {
@@ -88,7 +105,7 @@ void update_cpu_time(void)//this part goes to the work queue
   }
 }
 
-int add_node_to_list(int PID){
+int add_node_to_list(unsigned long PID){
   struct process_list *newNode;
   newNode = kmalloc(sizeof(*newNode), GFP_KERNEL);
   newNode->PID = PID;
