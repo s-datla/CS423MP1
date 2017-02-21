@@ -60,12 +60,12 @@ ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
   } else {
     struct process_list *process_entry;
     list_for_each_entry(process_entry, &p_list.list, list) {
-      len = sprintf(my_buffer,"PID: %d , CPU: %lu \n", process_entry->PID, process_entry->cpu_time);
-      copy_to_user(buf,my_buffer,len+1);
-      total += len + 1;
+      len += sprintf(buf + len,"PID: %d , CPU: %lu \n", process_entry->PID, process_entry->cpu_time);
+      copy_to_user(buf,my_buffer,len);
     }
   }
-  return total;
+  *eof = 1;
+  return len;
 }
 
 
