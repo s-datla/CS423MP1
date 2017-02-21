@@ -64,7 +64,6 @@ ssize_t read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
       copy_to_user(buf,my_buffer,len);
     }
   }
-  *eof = 1;
   return len;
 }
 
