@@ -16,6 +16,7 @@
 // Prototypes
 void cleanup_list(void);
 void update_cpu_time(void);
+int add_node_to_list(unsigned long PID);
 
 #include "mp1_given.h"
 
@@ -72,7 +73,7 @@ ssize_t write_proc(struct file *filp,const char *buf,size_t count,loff_t *offp)
 {
   long user_PID;
   copy_from_user(my_buffer,buf,count);
-  kstrtoul(msg,0,&user_PID);
+  kstrtoul(my_buffer,0,&user_PID);
   add_node_to_list(user_PID);
   return count;
 }
